@@ -16,6 +16,10 @@ const actionsRouter = require("./actions/actions-router");
 server.use("/api/projects", projectsRouter);
 server.use("/api/actions", actionsRouter);
 
+server.get("/", (req, res) => {
+  console.log("The server sure is going");
+});
+
 server.use((error, req, res, next) => {
   res.status(error.status || 500).json({
     message: error.message,
