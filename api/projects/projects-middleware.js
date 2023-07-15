@@ -17,14 +17,19 @@ async function validateProjectId(req, res, next) {
 }
 
 function validateProjectPost(req, res, next) {
-  const { name, description } = req.body;
-  if (!description || !name) {
+  const { name, description, completed } = req.body;
+  if (completed == undefined) {
+    res
+      .status(400)
+      .json({ message: "Please provide name and description of project" });
+  } else if (!description || !name) {
     res
       .status(400)
       .json({ message: "Please provide name and description of project" });
   } else {
     req.name = name.trim();
     req.description = description.trim();
+    req.completed = completed;
     next();
   }
 }

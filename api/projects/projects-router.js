@@ -26,29 +26,36 @@ router.get("/:id", validateProjectId, (req, res, next) => {
   res.json(req.project);
 });
 
-router.post("/", (req, res, next) => {
-  const { name, description } = req.body;
-  if (!name || !description) {
-    res
-      .status(400)
-      .json({ message: "Please provide title and description for post" });
-  } else {
-    Project.insert({ name: name, description: description })
-      .then((project) => {
-        res.json(project);
-      })
-      .catch(next);
-  }
+router.post("/", validateProjectPost, (req, res, next) => {
+  Project.insert({
+    name: req.name,
+    description: req.description,
+    completed: req.completed,
+  })
+    .then((project) => {
+      res.json(project);
+    })
+    .catch(next);
 });
 
 router.put("/:id", validateProjectId, validateProjectPost, (req, res, next) => {
   Project.update(req.params.id, {
-    description: req.description,
     name: req.name,
-    completed: true,
-  }).then((project) => {
-    res.json(project);
-  });
+    description: req.description,
+    completed: req.body.completed,
+  })
+    .then((project) => {
+      res.json(project);
+    })
+    .catch(next);
+});
+
+router.delete("/:id", validateProjectId, (req, res, next) => {
+  Project.remove(req.params.id)
+    .then((project) => {
+      res.json(project);
+    })
+    .catch(next);
 });
 
 module.exports = router;
